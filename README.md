@@ -195,7 +195,7 @@
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
             } else {
-                ActivityBind.getInstance().showFloat(FloatWindowUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
+                ActivityBind.getInstance().showFloat(FloatWindowUI.this, "http://video.jiecao.fm                                        /8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
                 finish();
 
             }
@@ -227,5 +227,47 @@
 
     }
 
+2.imagepick 包为图片选择 具体用法如下：
+
+   2.1 图片选择
         
+        PhotoPicker.init(new GlideImageLoader(), null);
+            Load load = PhotoPicker.load()
+                    .showCamera(true)
+                    .gridColumns(3);
+            courseFile.remove(0);
+            load.multi().maxPickSize(20).selectedPaths(courseFile).start(this);
+            
+   2.2 图片预览
+          
+          PhotoPicker.init(new GlideImageLoader(), null);
+          courseFile.remove(0);
+          PhotoPicker.preview()
+                    .paths(courseFile)
+                    .currentItem(position)
+                    .start(getActivity());
+            
+   2.3 重写onActivityResult()方法
+   
+            if (requestCode == PhotoPicker.REQUEST_SELECTED) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.EXTRA_RESULT);
+                courseFile.clear();
+                courseFile.add("");
+                courseFile.addAll(mSelectPath);
+                courseFileRecyclerAdapter.setImg(courseFile);
+                courseFileRecyclerAdapter.notifyDataSetChanged();
+
+              }
+            }
+           if (requestCode == PhotoPicker.REQUEST_PREVIEW) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<String> paths = data.getStringArrayListExtra(PhotoPicker.PATHS);
+                courseFile.clear();
+                courseFile.add("");
+                courseFile.addAll(paths);
+                courseFileRecyclerAdapter.setImg(courseFile);
+                courseFileRecyclerAdapter.notifyDataSetChanged();
+                    }
+                }
  
