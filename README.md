@@ -165,7 +165,7 @@
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     askForPermission();
                 } else {
-                    ActivityBind.getInstance().showFloat(FloatWindowUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
+                    ActivityBind.getInstance().showFloat(FloatWindowUI.this, "http://video.jiecao./8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
                     finish();
                 }
                 return true;
@@ -227,9 +227,9 @@
 
     }
 
-2.imagepick 包为图片选择 具体用法如下：
+3.imagepick 包为图片选择 具体用法如下：
 
-   2.1 图片选择
+   3.1 图片选择
         
         PhotoPicker.init(new GlideImageLoader(), null);
             Load load = PhotoPicker.load()
@@ -238,7 +238,7 @@
             courseFile.remove(0);
             load.multi().maxPickSize(20).selectedPaths(courseFile).start(this);
             
-   2.2 图片预览
+   3.2 图片预览
           
           PhotoPicker.init(new GlideImageLoader(), null);
           courseFile.remove(0);
@@ -247,7 +247,7 @@
                     .currentItem(position)
                     .start(getActivity());
             
-   2.3 重写onActivityResult()方法
+   3.3 重写onActivityResult()方法
    
             if (requestCode == PhotoPicker.REQUEST_SELECTED) {
             if (resultCode == RESULT_OK) {
@@ -270,4 +270,13 @@
                 courseFileRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
+      
  
+ 4.loading 包为加载过渡界面 
+ 5.swipeback 包为侧滑推出包
+    一般只需要使用baseUI继承就可以了 ，主题中加入这句话
+               
+         <item name="android:windowIsTranslucent">true</item>
+         
+ 6.xrecyclerview 包为上拉刷新 下拉加载的recyclerview 用法很简单不多解释
+   
