@@ -46,6 +46,7 @@ public class DocumentHandleDOC extends BaseDocumentHandle {
     private int screenWidth;
     private String htmlPath;
 
+
     private DocumentHandleDOC() {
     }
 
