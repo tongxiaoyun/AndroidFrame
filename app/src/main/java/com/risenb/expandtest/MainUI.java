@@ -36,7 +36,6 @@ public class MainUI extends SwipeBackUI {
     }
 
     public void doctoment(View v) {
-        startActivity(new Intent(MainUI.this, DoctomentUI.class));
     }
 
     public void imagePick(View v) {
