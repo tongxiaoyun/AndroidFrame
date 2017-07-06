@@ -15,12 +15,7 @@ import android.widget.VideoView;
 
 
 import com.risenb.expand.floatwindow.ActivityBind;
-import com.risenb.expand.floatwindow.FloatWindowService;
-import com.risenb.expand.floatwindow.interfaces.LayoutInitCallback;
-import com.risenb.expand.m;
 import com.risenb.expand.swipeback.base.SwipeBackUI;
-
-import java.util.ArrayList;
 
 /**
  * ================================================
@@ -31,7 +26,7 @@ import java.util.ArrayList;
  * 修订历史：
  * ================================================
  */
-public class TestTwoUI extends SwipeBackUI {
+public class FloatWindowUI extends SwipeBackUI {
     public static int OVERLAY_PERMISSION_REQ_CODE = 1234;
 
     private LinearLayout ll;
@@ -40,8 +35,7 @@ public class TestTwoUI extends SwipeBackUI {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
-        findViewById(R.id.av_float_window).setVisibility(View.GONE);
-        ActivityBind.getInstance().dismissFloat(TestTwoUI.this);
+        ActivityBind.getInstance().dismissFloat(FloatWindowUI.this);
 
 
         VideoView vv = (VideoView) findViewById(R.id.vv);
@@ -53,14 +47,14 @@ public class TestTwoUI extends SwipeBackUI {
     @Override
     protected void onResume() {
         super.onResume();
-        ActivityBind.getInstance().onResume(TestTwoUI.this);
+        ActivityBind.getInstance().onResume(FloatWindowUI.this);
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        ActivityBind.getInstance().onStop(TestTwoUI.this);
+        ActivityBind.getInstance().onStop(FloatWindowUI.this);
     }
 
 
@@ -70,12 +64,12 @@ public class TestTwoUI extends SwipeBackUI {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 askForPermission();
             } else {
-                ActivityBind.getInstance().showFloat(TestTwoUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
+                ActivityBind.getInstance().showFloat(FloatWindowUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
                 finish();
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {
-            ActivityBind.getInstance().funPress(TestTwoUI.this);
+            ActivityBind.getInstance().funPress(FloatWindowUI.this);
             return false;
         } else {
             return super.onKeyDown(keyCode, event);
@@ -95,12 +89,12 @@ public class TestTwoUI extends SwipeBackUI {
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
         if (!Settings.canDrawOverlays(this)) {
-            Toast.makeText(TestTwoUI.this, "当前无权限，请授权！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FloatWindowUI.this, "当前无权限，请授权！", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
         } else {
-            ActivityBind.getInstance().showFloat(TestTwoUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
+            ActivityBind.getInstance().showFloat(FloatWindowUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
             finish();
 
         }
@@ -117,11 +111,11 @@ public class TestTwoUI extends SwipeBackUI {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
             if (!Settings.canDrawOverlays(this)) {
-                Toast.makeText(TestTwoUI.this, "权限授予失败，无法开启悬浮窗", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FloatWindowUI.this, "权限授予失败，无法开启悬浮窗", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(TestTwoUI.this, "权限授予成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FloatWindowUI.this, "权限授予成功！", Toast.LENGTH_SHORT).show();
                 //启动FxService
-                ActivityBind.getInstance().showFloat(TestTwoUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
+                ActivityBind.getInstance().showFloat(FloatWindowUI.this, "http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4");
 
             }
             finish();

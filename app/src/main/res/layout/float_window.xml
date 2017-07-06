@@ -8,19 +8,10 @@
     android:orientation="vertical">
 
 
-
     <VideoView
         android:id="@+id/vv"
         android:layout_width="200dp"
         android:layout_height="150dp" />
 
-    <com.risenb.expand.loading.AVLoadingIndicatorView
-        android:id="@+id/av_float_window"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="visible"
-        app:indicator="BallGridPulse"
-        app:indicator_color="@android:color/holo_green_light" />
 
 </RelativeLayout>

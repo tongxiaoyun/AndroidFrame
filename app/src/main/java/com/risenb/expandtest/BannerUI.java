@@ -1,25 +1,15 @@
 package com.risenb.expandtest;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
-import android.support.v7.widget.GridLayoutManager;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.risenb.expand.banner.Banner;
 import com.risenb.expand.banner.BannerAdapter;
 import com.risenb.expand.floatwindow.ActivityBind;
 import com.risenb.expand.swipeback.base.SwipeBackUI;
-import com.risenb.expand.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +23,13 @@ import java.util.List;
  * 修订历史：
  * ================================================
  */
-public class TestUI extends SwipeBackUI {
+public class BannerUI extends SwipeBackUI {
 
 
     private Banner mBanner;
 
     private List<BannerModel> mDatas = new ArrayList<>();
+    private Banner mBanner2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +37,7 @@ public class TestUI extends SwipeBackUI {
         setContentView(R.layout.banner);
 
         mBanner = (Banner) findViewById(R.id.id_banner);
+        mBanner2 = (Banner) findViewById(R.id.id_banner_2);
 
         BannerAdapter adapter = new BannerAdapter<BannerModel>(mDatas) {
             @Override
@@ -55,7 +47,24 @@ public class TestUI extends SwipeBackUI {
 
             @Override
             public void bindImage(ImageView imageView, BannerModel bannerModel) {
-                Glide.with(TestUI.this)
+                Glide.with(BannerUI.this)
+                        .load(bannerModel.getImageUrl())
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
+                        .into(imageView);
+            }
+
+        };
+
+        BannerAdapter adapter2 = new BannerAdapter<BannerModel>(mDatas) {
+            @Override
+            protected void bindTips(TextView tv, BannerModel bannerModel) {
+                tv.setText(bannerModel.getTips());
+            }
+
+            @Override
+            public void bindImage(ImageView imageView, BannerModel bannerModel) {
+                Glide.with(BannerUI.this)
                         .load(bannerModel.getImageUrl())
                         .placeholder(R.mipmap.ic_launcher)
                         .error(R.mipmap.ic_launcher)
@@ -64,6 +73,7 @@ public class TestUI extends SwipeBackUI {
 
         };
         mBanner.setBannerAdapter(adapter);
+        mBanner2.setBannerAdapter(adapter2);
         getData();
 
     }
@@ -71,32 +81,17 @@ public class TestUI extends SwipeBackUI {
     @Override
     protected void onResume() {
         super.onResume();
-        ActivityBind.getInstance().onResume(TestUI.this);
+        ActivityBind.getInstance().onResume(BannerUI.this);
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        ActivityBind.getInstance().onStop(TestUI.this);
+        ActivityBind.getInstance().onStop(BannerUI.this);
     }
 
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-            ActivityBind.getInstance().funPress(TestUI.this);
-            return false;
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        ActivityBind.getInstance().dismissFloat(TestUI.this);
-    }
 
     private void getData() {
         mDatas.clear();
@@ -122,8 +117,8 @@ public class TestUI extends SwipeBackUI {
         model.setTips("这是页面5");
         mDatas.add(model);
         mBanner.notifyDataHasChanged();
+        mBanner2.notifyDataHasChanged();
     }
-
 
 
 }
