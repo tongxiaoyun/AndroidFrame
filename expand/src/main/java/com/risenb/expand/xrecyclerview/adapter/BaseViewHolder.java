@@ -3,6 +3,9 @@ package com.risenb.expand.xrecyclerview.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.risenb.expand.xrecyclerview.bean.BaseFootBean;
+import com.risenb.expand.xrecyclerview.bean.BaseHeadBean;
+
 /**
  * ================================================
  * 作    者：tongxiaoyun
@@ -25,6 +28,10 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
     }
 
     protected abstract void prepareData();
+
+    protected abstract void initHead(BaseHeadBean bean);
+
+    protected abstract void initFoot(BaseFootBean bean);
 
 
     protected abstract void reflectionView(View v);
