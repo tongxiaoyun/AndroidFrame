@@ -9,6 +9,8 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -41,6 +43,19 @@ public class FloatWindowUI extends SwipeBackUI {
         VideoView vv = (VideoView) findViewById(R.id.vv);
         vv.setVideoURI(Uri.parse("http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4"));
         vv.start();
+            WebView video_webview = (WebView) findViewById(R.id.video_webview);
+        video_webview.getSettings().setBuiltInZoomControls(true);// 隐藏缩放按钮
+        video_webview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);// 排版适应屏幕
+        video_webview.getSettings().setUseWideViewPort(true);// 可任意比例缩放
+        video_webview.getSettings().setLoadWithOverviewMode(true);// setUseWideViewPort方法设置webview推荐使用的窗口。setLoadWithOverviewMode方法是设置webview加载的页面的模式。
+        video_webview.getSettings().setSavePassword(true);
+        video_webview.getSettings().setSaveFormData(true);// 保存表单数据
+        video_webview.getSettings().setJavaScriptEnabled(true);
+        video_webview.getSettings().setGeolocationEnabled(true);// 启用地理定位
+        video_webview.getSettings().setGeolocationDatabasePath("/data/data/org.itri.html5webview/databases/");// 设置定位的数据库路径
+        video_webview.getSettings().setDomStorageEnabled(true);
+        video_webview.loadUrl("file:///android_asset/test.html");
+
 
     }
 
