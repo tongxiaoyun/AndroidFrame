@@ -35,7 +35,7 @@ public class ImageAdapter<T extends String> extends BaseRecyclerAdapter {
 
     @Override
     protected BaseViewHolder loadView(Context context, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_image, parent, false));
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_review, parent, false));
     }
 
     private class ViewHolder extends BaseViewHolder<T> {
