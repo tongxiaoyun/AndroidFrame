@@ -519,7 +519,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     @Override
     public void delete(int position) {
         resultList.remove(position);
-        photoGridAdapter.notifyDataSetChanged();
+        photoGridAdapter.setDefaultSelected(resultList);
         reviewAdapter.notifyDataSetChanged();
         refreshPreviewButtonState(resultList);
     }
