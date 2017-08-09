@@ -17,11 +17,12 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="#90000000"
-        android:clickable="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:background="#90000000"
+        android:clickable="true"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/ll_bottom"
