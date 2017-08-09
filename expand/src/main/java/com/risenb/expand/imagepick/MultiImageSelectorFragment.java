@@ -21,6 +21,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +38,7 @@ import android.widget.Toast;
 
 import com.risenb.expand.R;
 import com.risenb.expand.imagepick.adapter.FolderAdapter;
+import com.risenb.expand.imagepick.adapter.ImageAdapter;
 import com.risenb.expand.imagepick.adapter.PhotoGridAdapter;
 import com.risenb.expand.imagepick.bean.Folder;
 import com.risenb.expand.imagepick.bean.Image;
@@ -62,9 +65,10 @@ import java.util.List;
  * 修订历史：
  * ================================================
  */
-public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridClickListener {
+public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridClickListener, ImageAdapter.ClickImageBack {
 
     private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 110;
+    public static final int RESULT_CANCELED = 0;
     public static final int RESULT_OK = -1;
 
     // image result data set
@@ -78,9 +82,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
 
     private ListPopupWindow mFolderPopupWindow;
 
-    private TextView mCategoryText;
     private View mPopupAnchorView;
-    private Button btnPreview;
     private RecyclerView rv_photos;
     private PhotoGridAdapter photoGridAdapter;
 
@@ -88,6 +90,10 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
 
     private PickerParams pickerParams;
     private ImageCaptureManager captureManager;
+    private RecyclerView rvBottom;
+    private TextView tv_bottom_review;
+    private ImageAdapter<String> reviewAdapter;
+    private TextView tv_bottom_ok;
 
     public static MultiImageSelectorFragment newInstance(PickerParams params) {
         MultiImageSelectorFragment fragment = new MultiImageSelectorFragment();
@@ -127,20 +133,27 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        tv_bottom_review = (TextView) view.findViewById(R.id.tv_bottom_review);
         mPopupAnchorView = view.findViewById(R.id.footer);
-        mCategoryText = (TextView) view.findViewById(R.id.category_btn);
-        btnPreview = (Button) view.findViewById(R.id.btnPreview);
+        rvBottom = (RecyclerView) view.findViewById(R.id.rv_bottom);
+        tv_bottom_ok = (TextView) view.findViewById(R.id.tv_bottom_ok);
 
-        btnPreview.setOnClickListener(new View.OnClickListener() {
+        tv_bottom_ok.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                previewPhotos();
+            public void onClick(View v) {
+                if (resultList != null && resultList.size() > 0) {
+                    // Notify success
+                    Intent data = new Intent();
+                    data.putStringArrayListExtra(PhotoPicker.EXTRA_RESULT, resultList);
+                    getActivity().setResult(RESULT_OK, data);
+                } else {
+                    getActivity().setResult(RESULT_CANCELED);
+                }
+                getActivity().finish();
             }
         });
 
         if (pickerParams.mode == SelectMode.MULTI) {
-            btnPreview.setVisibility(View.VISIBLE);
             ArrayList<String> tmp = pickerParams.selectedPaths;
             if (tmp != null && tmp.size() > 0) {
                 resultList = tmp;
@@ -148,25 +161,6 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
             refreshPreviewButtonState(resultList);
         }
 
-        mCategoryText.setText(R.string.folder_all);
-        mCategoryText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (mFolderPopupWindow == null) {
-                    createPopupFolderList();
-                }
-
-                if (mFolderPopupWindow.isShowing()) {
-                    mFolderPopupWindow.dismiss();
-                } else {
-                    mFolderPopupWindow.show();
-                    int index = mFolderAdapter.getSelectIndex();
-                    index = index == 0 ? index : index - 1;
-                    mFolderPopupWindow.getListView().setSelection(index);
-                }
-            }
-        });
 
         mFolderAdapter = new FolderAdapter(getActivity());
 
@@ -176,8 +170,13 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         photoGridAdapter.setOnPhotoGridClickListener(this);
 
         rv_photos = (RecyclerView) view.findViewById(R.id.rv_photos);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(pickerParams.gridColumns, OrientationHelper.VERTICAL);
-        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), pickerParams.gridColumns * 2);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return position == 0 || position == 1 ? pickerParams.gridColumns : 2;
+            }
+        });
         rv_photos.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space_size);
         rv_photos.addItemDecoration(new GridSpacingItemDecoration(pickerParams.gridColumns, spacingInPixels, false));
@@ -229,13 +228,11 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
 
                         if (index == 0) {
                             getActivity().getSupportLoaderManager().restartLoader(0, null, mLoaderCallback);
-                            mCategoryText.setText(R.string.folder_all);
                             photoGridAdapter.setShowCamera(pickerParams.showCamera);
                         } else {
                             Folder folder = (Folder) v.getAdapter().getItem(index);
                             if (null != folder) {
                                 photoGridAdapter.setData(folder.images);
-                                mCategoryText.setText(folder.name);
                                 if (resultList != null && resultList.size() > 0) {
                                     photoGridAdapter.setDefaultSelected(resultList);
                                 }
@@ -399,12 +396,22 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     }
 
     private void refreshPreviewButtonState(ArrayList<String> resultList) {
-        String text = getString(R.string.preview);
-        if (resultList.size() > 0) {
-            text += "(" + resultList.size() + ")";
+        if (reviewAdapter == null) {
+            reviewAdapter = new ImageAdapter<>();
+            reviewAdapter.setActivity(getActivity());
+            reviewAdapter.setClickImageBack(this);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            rvBottom.setLayoutManager(layoutManager);
+            rvBottom.setAdapter(reviewAdapter);
         }
-        btnPreview.setText(text);
-        btnPreview.setEnabled(resultList.size() > 0);
+        reviewAdapter.setList(resultList);
+        tv_bottom_review.setText("已添加" + resultList.size() + "张照片");
+        if (resultList.size() > 0) {
+            mPopupAnchorView.setVisibility(View.VISIBLE);
+        } else {
+            mPopupAnchorView.setVisibility(View.GONE);
+        }
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -465,8 +472,9 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
                         photoGridAdapter.setDefaultSelected(resultList);
                     }
                     if (!hasFolderGened) {
-                        mFolderAdapter.setData(mResultFolder);
+                        mCallback.fileloadFinish(mResultFolder);
                         hasFolderGened = true;
+
                     }
                 }
             }
@@ -489,9 +497,38 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         return null;
     }
 
-    private void previewPhotos() {
+
+    public void listImage(int index, AdapterView<?> v) {
+        if (index == 0) {
+            getActivity().getSupportLoaderManager().restartLoader(0, null, mLoaderCallback);
+            photoGridAdapter.setShowCamera(pickerParams.showCamera);
+        } else {
+            Folder folder = (Folder) v.getAdapter().getItem(index);
+            if (null != folder) {
+                photoGridAdapter.setData(folder.images);
+                if (resultList != null && resultList.size() > 0) {
+                    photoGridAdapter.setDefaultSelected(resultList);
+                }
+            }
+            photoGridAdapter.setShowCamera(pickerParams.showCamera);
+        }
+
+        rv_photos.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void delete(int position) {
+        resultList.remove(position);
+        photoGridAdapter.notifyDataSetChanged();
+        reviewAdapter.notifyDataSetChanged();
+        refreshPreviewButtonState(resultList);
+    }
+
+    @Override
+    public void review(int position) {
         PhotoPicker.preview()
                 .paths(resultList)
+                .currentItem(position)
                 .start(this);
     }
 
@@ -508,6 +545,8 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         void onCameraShot(String filePath);
 
         void onImagePathsChange(ArrayList<String> paths);
+
+        void fileloadFinish(List<Folder> folders);
     }
 
     @Override

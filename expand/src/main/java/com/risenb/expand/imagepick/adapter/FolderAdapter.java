@@ -90,7 +90,6 @@ public class FolderAdapter extends BaseAdapter {
         if (holder != null) {
             if(i == 0){
                 holder.name.setText(R.string.folder_all);
-                holder.path.setText("/sdcard");
                 holder.size.setText(String.format("%d%s",
                         getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
                 if(mFolders.size() > 0) {
@@ -142,7 +141,6 @@ public class FolderAdapter extends BaseAdapter {
 
     class ViewHolder{
         TextView name;
-        TextView path;
         TextView size;
         ImageView indicator;
         FrameLayout itemViewFrame;
@@ -150,7 +148,6 @@ public class FolderAdapter extends BaseAdapter {
 
         ViewHolder(View view) {
             name = (TextView) view.findViewById(R.id.name);
-            path = (TextView) view.findViewById(R.id.path);
             size = (TextView) view.findViewById(R.id.size);
             indicator = (ImageView) view.findViewById(R.id.indicator);
             itemViewFrame = (FrameLayout) view.findViewById(R.id.itemViewFrame);
@@ -170,7 +167,6 @@ public class FolderAdapter extends BaseAdapter {
                 return;
             }
             name.setText(data.name);
-            path.setText(data.path);
             if (data.images != null) {
                 size.setText(String.format("%d%s", data.images.size(), mContext.getResources().getString(R.string.photo_unit)));
             }else{

@@ -1,18 +1,26 @@
 package com.risenb.expand.imagepick.picker;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.risenb.expand.R;
 import com.risenb.expand.imagepick.PhotoPicker;
+import com.risenb.expand.imagepick.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * ================================================
  * 作    者：tongxiaoyun

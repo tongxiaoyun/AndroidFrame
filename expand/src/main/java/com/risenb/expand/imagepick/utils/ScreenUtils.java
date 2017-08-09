@@ -3,8 +3,11 @@ package com.risenb.expand.imagepick.utils;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.lang.reflect.Method;
 
 /**
  * ================================================
@@ -31,6 +34,16 @@ public class ScreenUtils {
         return out;
     }
 
+    public static int getScreenHeight(Context context) {
+        WindowManager wm = (WindowManager)context.getSystemService("window");
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.heightPixels;
+    }
+
+
+
+
     /**
      * dp2px
      */
@@ -38,4 +51,53 @@ public class ScreenUtils {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+
+    /**
+     * 获得状态栏的高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusHeight(Context context)
+    {
+
+        int statusHeight = -1;
+        try
+        {
+            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
+            Object object = clazz.newInstance();
+            int height = Integer.parseInt(clazz.getField("status_bar_height")
+                    .get(object).toString());
+            statusHeight = context.getResources().getDimensionPixelSize(height);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return statusHeight;
+    }
+
+    public static int getBottomStatusHeight(Context context) {
+        int totalHeight = getDpi(context);
+        int contentHeight = getScreenHeight(context);
+        return totalHeight - contentHeight;
+    }
+
+    public static int getDpi(Context context) {
+        int dpi = 0;
+        WindowManager windowManager = (WindowManager)context.getSystemService("window");
+        Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+
+        try {
+            Class c = Class.forName("android.view.Display");
+            Method e = c.getMethod("getRealMetrics", new Class[]{DisplayMetrics.class});
+            e.invoke(display, new Object[]{displayMetrics});
+            dpi = displayMetrics.heightPixels;
+        } catch (Exception var8) {
+            var8.printStackTrace();
+        }
+
+        return dpi;
+    }
+
 }

@@ -146,7 +146,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
 
 
         if (getItemViewType(position) == ITEM_TYPE_CONTENT) {
-            ((BaseViewHolder) holder).prepareData(list == null ? null : list.get(position - mHeaderCount), position - 1);
+            ((BaseViewHolder) holder).prepareData(list == null ? null : list.get(position - mHeaderCount), position - mHeaderCount);
             if (onItemClickListener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -157,7 +157,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
             }
         } else if (getItemViewType(position) == ITEM_TYPE_HEADER) {
             ((BaseViewHolder) holder).initHead(baseHeadBean);
-        } else if (getItemViewType(position) == ITEM_TYPE_HEADER) {
+        } else if (getItemViewType(position) == ITEM_TYPE_BOTTOM) {
             ((BaseViewHolder) holder).initFoot(baseFootBean);
         }
     }

@@ -30,6 +30,7 @@ public class PhotoGridAdapter extends SelectableAdapter {
 
     public final static int ITEM_TYPE_CAMERA = 100;
     public final static int ITEM_TYPE_PHOTO = 101;
+    public final static int ITEM_TYPE_PHOTO2 = 102;
 
     private Context mCxt;
     private LayoutInflater inflater;
@@ -70,6 +71,9 @@ public class PhotoGridAdapter extends SelectableAdapter {
         if (viewType == ITEM_TYPE_PHOTO) {
             itemView = inflater.inflate(R.layout.photopicker_grid_item_image, parent, false);
             holder = new PhotoViewHolder(itemView, imageSize);
+        } else if (viewType == ITEM_TYPE_PHOTO2) {
+            itemView = inflater.inflate(R.layout.photopicker_grid_item_image, parent, false);
+            holder = new PhotoViewHolder(itemView, imageSize * 3 / 2);
         } else {
             itemView = inflater.inflate(R.layout.photopicker_grid_item_camera, parent, false);
             holder = new CaremaViewHolder(itemView);
@@ -88,9 +92,26 @@ public class PhotoGridAdapter extends SelectableAdapter {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
 
-        if (getItemViewType(position) == ITEM_TYPE_PHOTO) {
+        if (getItemViewType(position) == ITEM_TYPE_PHOTO || getItemViewType(position) == ITEM_TYPE_PHOTO2) {
+
 
             final PhotoViewHolder holder = (PhotoViewHolder) viewHolder;
+            if (getItemViewType(position) == ITEM_TYPE_PHOTO2) {
+                if (position == 1) {
+                    holder.v_space_size.setVisibility(View.VISIBLE);
+                } else {
+                    holder.v_space_size.setVisibility(View.GONE);
+                }
+
+            } else {
+
+                if (position % 3 == 2) {
+                    holder.v_space_size.setVisibility(View.GONE);
+                } else {
+                    holder.v_space_size.setVisibility(View.VISIBLE);
+                }
+
+            }
 
             final Image image = mImages.get(showCamera() ? position - 1 : position);
             // 是否显示指示器
@@ -110,7 +131,7 @@ public class PhotoGridAdapter extends SelectableAdapter {
                         holder.gridItemView,
                         image.path,
                         R.id.photopicker_item_tag_id,
-                        imageSize, imageSize);
+                        getItemViewType(position) == ITEM_TYPE_PHOTO ? imageSize : imageSize * 3 / 2, getItemViewType(position) == ITEM_TYPE_PHOTO ? imageSize : imageSize * 3 / 2);
 
                 holder.gridItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -129,7 +150,12 @@ public class PhotoGridAdapter extends SelectableAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return (showCamera() && position == 0) ? ITEM_TYPE_CAMERA : ITEM_TYPE_PHOTO;
+        if (position < 2) {
+            return (showCamera() && position == 0) ? ITEM_TYPE_CAMERA : ITEM_TYPE_PHOTO2;
+        } else {
+            return ITEM_TYPE_PHOTO;
+        }
+
     }
 
     @Override
@@ -153,6 +179,7 @@ public class PhotoGridAdapter extends SelectableAdapter {
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
 
+        private final View v_space_size;
         FrameLayout imageFrame;
         ImageView gridItemView;
         View mask;
@@ -167,14 +194,17 @@ public class PhotoGridAdapter extends SelectableAdapter {
             mask = itemView.findViewById(R.id.mask);
             indicator = (ImageView) itemView.findViewById(R.id.checkmark);
             imageFrame = (FrameLayout) itemView.findViewById(R.id.imageFrame);
+            v_space_size = itemView.findViewById(R.id.v_space_size);
 
             if (PhotoPicker.getInstance() != null) {
                 gridItemView = PhotoPicker.getInstance().getImageLoader()
                         .onCreateGridItemView(itemView.getContext());
+                gridItemView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageFrame.addView(gridItemView, new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                 ));
             }
+
         }
     }
 

@@ -11,9 +11,77 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- 调整多媒体音量 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!--************************************************ SD卡权限 ***********************************************-->
+    <!-- 在sdcard中创建/删除文件的权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- sdcard操作允许 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许读取SD卡数据 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--************************************************ SD卡权限 end ***********************************************-->
+
+
+    <!--************************************************ 日历 ***********************************************-->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <!--************************************************ 日历 end ***********************************************-->
+
+
+    <!--************************************************ 访问照相机 ***********************************************-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!--************************************************ 访问照相机 end ***********************************************-->
+
+
+    <!--************************************************ 联系人 ***********************************************-->
+    <!-- 读联系人 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 写联系人 -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <!--************************************************ 联系人 end ***********************************************-->
+
+
+    <!--************************************************ 位置 ***********************************************-->
+    <!-- 访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 获取精确位置 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--************************************************ 位置 end ***********************************************-->
+
+    <!--************************************************ 使用麦克风 ***********************************************-->
+    <!-- 使用麦克风 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--************************************************ 使用麦克风 end ***********************************************-->
+
+    <!--************************************************ 电话 ***********************************************-->
+    <!-- 拨打电话权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!-- 读取电话状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--************************************************ 电话 end ***********************************************-->
+
+
+    <!--************************************************ 传感器 ***********************************************-->
+    <!-- 传感器信息 -->
+    <uses-permission android:name="android.permission.SENSOR_INFO" />
+    <!-- 调用传感器 -->
+    <uses-permission android:name="android.permission.SENSOR_ENABLE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <!--************************************************ 传感器 end ***********************************************-->
+
+
+    <!--************************************************ 短信 ***********************************************-->
+    <!--  发送消息-->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <!--  阅读消息-->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <!--  写入消息-->
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <!-- 接收消息 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <!--************************************************ 短信 end ***********************************************-->
+
 
     <application
         android:name=".MyApplication"
@@ -41,6 +109,18 @@
             android:name="com.risenb.expandtest.FloatWindowUI"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name="com.risenb.expand.imagepick.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/NO_ACTION_BAR" />
+
+        <activity
+            android:name="com.risenb.expand.imagepick.PhotoPreviewActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/NO_ACTION_BAR" />
 
 
         <service android:name="com.risenb.expand.floatwindow.FloatWindowService" />
