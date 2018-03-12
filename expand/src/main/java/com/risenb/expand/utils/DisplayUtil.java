@@ -59,11 +59,11 @@ public class DisplayUtil {
     }
 
 
-    public int getDimen(Context context, int dimen) {
+    public static int getDimen(Context context, int dimen) {
         return context.getResources().getDimensionPixelOffset(dimen);
     }
 
-    public int getDimen(int dimen) {
+    public static int getDimen(int dimen) {
         return m.getInstance().getApplication().getResources().getDimensionPixelOffset(dimen);
     }
 }
