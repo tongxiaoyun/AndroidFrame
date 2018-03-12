@@ -43,5 +43,9 @@
 
     <style name="NO_ACTIONBAR" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
-
+    <style name="MIDialog" parent="android:Theme.Holo.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

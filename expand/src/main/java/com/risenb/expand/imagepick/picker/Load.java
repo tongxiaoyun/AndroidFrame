@@ -22,13 +22,14 @@ public class Load {
         return this;
     }
 
-    public Load showCamera(boolean showCamera){
+    public Load showCamera(boolean showCamera) {
         this.params.showCamera = showCamera;
         return this;
     }
 
-    public Load gridColumns(int columns){
-        if(columns > 0) {
+
+    public Load gridColumns(int columns) {
+        if (columns > 0) {
             this.params.gridColumns = columns;
         }
         return this;
@@ -38,7 +39,7 @@ public class Load {
         return new SingleSelect(params);
     }
 
-    public MultiSelect multi(){
+    public MultiSelect multi() {
         return new MultiSelect(params);
     }
 }
