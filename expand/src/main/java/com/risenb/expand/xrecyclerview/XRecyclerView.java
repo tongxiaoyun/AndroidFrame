@@ -60,6 +60,10 @@ public class XRecyclerView extends RecyclerView {
         init();
     }
 
+    public void setHeadPosition(int headPosition) {
+        this.headPosition = headPosition;
+    }
+
     private void init() {
         if (pullRefreshEnabled) {
             mRefreshHeader = new ArrowRefreshHeader(getContext());
