@@ -60,10 +60,16 @@ public class DisplayUtil {
 
 
     public static int getDimen(Context context, int dimen) {
-        return context.getResources().getDimensionPixelOffset(dimen);
+        int px = context.getResources().getDimensionPixelOffset(dimen);
+        return DimenUtils.getDimenUtils().getDimen(px);
     }
 
     public static int getDimen(int dimen) {
+        int px = m.getInstance().getApplication().getResources().getDimensionPixelOffset(dimen);
+        return DimenUtils.getDimenUtils().getDimen(px);
+    }
+
+    public static int getDimenUtils(int dimen) {
         return m.getInstance().getApplication().getResources().getDimensionPixelOffset(dimen);
     }
 }

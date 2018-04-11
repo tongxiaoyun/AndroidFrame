@@ -2,8 +2,11 @@ package com.risenb.expand;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.risenb.expand.floatwindow.interfaces.LayoutInitCallback;
 import com.risenb.expand.loading.model.LoadingM;
@@ -34,6 +37,10 @@ public class m {
     private LayoutInitCallback callback;
     private MyOkHttp netUtils;
     private Application application;
+    private int widthPixels;
+    private int heightPixels;
+    private float density;
+    private int densityDpi;
 
     private m() {
         loadingM = new LoadingM();
@@ -67,6 +74,7 @@ public class m {
 
     public m setApplication(Application application) {
         this.application = application;
+        machineInformation();
         return instance;
     }
 
@@ -118,6 +126,33 @@ public class m {
 
     }
 
+    public void machineInformation() {
+        DisplayMetrics metric = new DisplayMetrics();
+        ((WindowManager) application.getSystemService("window")).getDefaultDisplay().getMetrics(metric);
+        widthPixels = metric.widthPixels;
+        heightPixels = metric.heightPixels;
+        density = metric.density;
+        densityDpi = metric.densityDpi;
+        String value = "W = " + this.widthPixels + " H = " + this.heightPixels + " DENSITY = " + this.density + " DENSITYDPI = " + this.densityDpi + " VERSION = " + Build.VERSION.RELEASE;
+        com.risenb.expand.utils.Log.e(value);
+
+    }
+
+    public int getWidthPixels() {
+        return widthPixels;
+    }
+
+    public int getHeightPixels() {
+        return heightPixels;
+    }
+
+    public float getDensity() {
+        return density;
+    }
+
+    public int getDensityDpi() {
+        return densityDpi;
+    }
 
     public LoadingM getLoadingM() {
         return loadingM;
