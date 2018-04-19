@@ -2,6 +2,7 @@ package com.risenb.expand.network.builder;
 
 import com.risenb.expand.network.MyOkHttp;
 import com.risenb.expand.network.response.IResponseHandler;
+import com.risenb.expand.utils.Log;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,6 +39,7 @@ public abstract class OkHttpRequestBuilder<T extends OkHttpRequestBuilder> {
     public T url(String url)
     {
         this.mUrl = url;
+        Log.e("RequestURL >>>> " + url);
         return (T) this;
     }
 
